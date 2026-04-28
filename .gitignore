@@ -1,5 +1,21 @@
+# Maven
 target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
 *.log
 *.pid
+
+# IDE
 .idea/
 *.iml
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
