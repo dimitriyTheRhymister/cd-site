@@ -8,9 +8,8 @@
     <link rel="icon" type="image/svg+xml" href="/img/icons/svg/check-double-solid_dark.svg">
 
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
     <meta name="description" content="CheckDev - пробные собеседования в IT.">
-    <title th:text="${'Профиль ' + personDto.username}">Профиль ИМЯ_ПРОФИЛЯ</title>
+    <title th:text="${'Профиль ' + personDto.firstName + ' ' + personDto.lastName}">Профиль ИМЯ_ПРОФИЛЯ</title>
 
     <!-- Required meta tags -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -37,21 +36,10 @@
                 <h5 class="card-header">Просмотр пользователя</h5>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <!--/*
-                        <div class="col-3">
-                            Временно отключено task#525
-                            <div class="mb-3">
-                                <i th:if="${photoId<0}"
-                                   class="fas fa-image" style="font-size: 3em;"></i>
-                                <img th:if="${photoId>0}"
-                                     th:src="@{/photo/{id}(id=${photoId})}" class="w-100"
-                                     alt="No image">
-                            </div>
-                        </div> */-->
                         <div class="col-9">
                             <div class="mb-3">
                                 <h4>
-                                    <p th:text="'Имя: ' + ${personDto.username}">Имя пользователя</p>
+                                    <p th:text="'Имя: ' + ${personDto.firstName + ' ' + personDto.lastName}">Имя пользователя</p>
                                 </h4>
                             </div>
                             <div class="mb-3">
@@ -71,10 +59,8 @@
                             </div>
                         </div>
                     </div>
-                    <!--/*Кнопка редактировать*/-->
                     <a class="btn btn-success mt-3"
                        th:href="@{/persons/edit}">Редактировать</a>
-                    <!--Кнопка смены пароля-->
                     <a class="btn btn-success mt-3"
                        th:href="@{/persons/changePassword}">Сменить пароль</a>
                 </div>

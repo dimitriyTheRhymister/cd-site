@@ -8,9 +8,8 @@
     <link rel="icon" type="image/svg+xml" href="/img/icons/svg/check-double-solid_dark.svg">
 
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
     <meta name="description" content="CheckDev - пробные собеседования в IT.">
-    <title th:text="${'Профиль ' + profile.username}">Профиль ИМЯ_ПРОФИЛЯ</title>
+    <title th:text="${'Профиль ' + profile.firstName + ' ' + profile.lastName}">Профиль ИМЯ_ПРОФИЛЯ</title>
 
     <!-- Required meta tags -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -37,19 +36,11 @@
                 <h5 class="card-header">Просмотр пользователя</h5>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <!--                                Временно закомментировано-->
-
-                        <!--                                        <i class="fas fa-image" style="font-size: 3em;"-->
-                        <!--                                           th:if="${#strings.isEmpty(profile.photoId)}"></i>-->
-                        <!--                                        <img alt="No image"-->
-                        <!--                                             class="w-100"-->
-                        <!--                                             th:if="${not #strings.isEmpty(profile.photoId)}"-->
-                        <!--                                             th:src="@{http://localhost:9900/img(id=*{profile.photoId})}">-->
                         <div class="col-9">
                             <div class="col-9">
                                 <div class="mb-3">
                                     <p>
-                                        Имя: <strong th:text="${profile.username}"></strong>
+                                        Имя: <strong th:text="${profile.firstName + ' ' + profile.lastName}"></strong>
                                     </p>
                                 </div>
                                 <div class="mb-3">

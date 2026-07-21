@@ -8,7 +8,6 @@
     <link rel="icon" type="image/svg+xml" href="/img/icons/svg/check-double-solid_dark.svg">
 
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
     <meta name="description" content="CheckDev - пробные собеседования в IT.">
     <title>Профили</title>
 
@@ -43,7 +42,7 @@
             <td class="text-start">
                 <div>
                     <a th:href="@{|/profiles/${profile.profileDTO.id}|}">
-                        <span class="fw-bold" th:text="${profile.profileDTO.username}"></span>
+                        <span class="fw-bold" th:text="${profile.profileDTO.firstName + ' ' + profile.profileDTO.lastName}"></span>
                     </a>
                 </div>
             </td>

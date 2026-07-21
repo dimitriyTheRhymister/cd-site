@@ -183,7 +183,7 @@
                                         <i class="far fa-clock pl-3"></i>
                                         <span th:text="${#strings.substring(interview.createDate, 0, 10)}"></span>
                                         <i class="far fa-user pl-3"></i>
-                                        <span th:text="${authService.findById(interview.submitterId).username}"></span>
+                                        <span th:text="${authService.findById(interview.submitterId).firstName + ' ' + authService.findById(interview.submitterId).lastName}"></span>
                                         <i class="fa fa-comments pl-3" aria-hidden="true"></i>
                                         <span>Откликов:</span>
                                         <span th:text="${interview.countWishers}"></span>

@@ -22,6 +22,8 @@ public class ProfileDTO {
     @EqualsAndHashCode.Include
     private Integer id;
     private String username;
+    private String firstName;   // ← НОВОЕ
+    private String lastName;    // ← НОВОЕ
     private String experience;
     private Integer photoId;
     /**
