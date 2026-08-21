@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.site.dto.CategoryDTO;
+import ru.job4j.site.exception.IdNotFoundException;
 import ru.job4j.site.service.AuthService;
 import ru.job4j.site.service.CategoriesService;
 import ru.job4j.site.service.NotificationService;
@@ -23,6 +24,26 @@ public class CategoryController {
     private final CategoriesService categoriesService;
     private final AuthService authService;
     private final NotificationService notifications;
+
+    @GetMapping("/{id}")
+    public String getById(@PathVariable int id, Model model, HttpServletRequest req) throws JsonProcessingException {
+        var category = categoriesService.getById(id);
+        if (category.isEmpty()) {
+            throw new IdNotFoundException("Категория не найдена: /category/" + id);
+        }
+        model.addAttribute("category", category.get());
+        var token = getToken(req);
+        if (token != null) {
+            var userInfo = authService.userInfo(token);
+            model.addAttribute("innerMessages", notifications.findBotMessageByUserId(token, userInfo.getId()));
+            RequestResponseTools.addAttrCanManage(model, userInfo);
+        }
+        RequestResponseTools.addAttrBreadcrumbs(model,
+                "Главная", "/index",
+                "Категории", "/categories/",
+                category.get().getName(), String.format("/category/%d", id));
+        return "categories/categoryDetails"; // Или ваш шаблон для просмотра категории
+    }
 
     @GetMapping("/createForm")
     public String createForm(Model model, HttpServletRequest req) throws JsonProcessingException {

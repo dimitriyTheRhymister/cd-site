@@ -9,18 +9,14 @@ import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import ru.job4j.site.dto.ProfileDTO;
+import ru.job4j.site.exception.AppException;
+import ru.job4j.site.exception.IdNotFoundException;
 
 import java.util.List;
 
-/**
- * CheckDev пробное собеседование
- * Класс обработки неблокирующих запросов get и post(Multipart) в сервис AUTH
- *
- * @author Dmitry Stepanov, user Dmitry
- * @since 19.09.2023
- */
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -28,7 +24,9 @@ public class WebClientAuthCall {
     private final WebClient webClient;
 
     /**
-     * Метод doGet отправляет get запрос в сервис AUTH
+     * Метод doGet отправляет get запрос в сервис AUTH.
+     * При получении ошибки 404 выбрасываем IdNotFoundException,
+     * при других ошибках - AppException.
      *
      * @param url   составной адрес сервиса
      * @param token "Authorization", "Bearer + token" доступ
@@ -41,13 +39,18 @@ public class WebClientAuthCall {
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(String.class)
+                .onErrorMap(WebClientResponseException.class, ex -> {
+                    if (ex.getStatusCode().value() == 404) {
+                        return new IdNotFoundException("Ресурс не найден: " + url);
+                    }
+                    return new AppException("Ошибка при обращении к сервису: " + ex.getStatusCode());
+                })
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
     /**
      * Метод doPostMultipart отправляет post запрос в сервис AUTH.
-     * Тело запроса содержит MULTIPART_FROM_DATA,
-     * многосоставное тела которое содержит объекты различного типа.
+     * Тело запроса содержит MULTIPART_FROM_DATA.
      *
      * @param url     составной адрес сервиса
      * @param token   "Authorization", "Bearer + token" доступ
@@ -63,6 +66,12 @@ public class WebClientAuthCall {
                 .body(BodyInserters.fromMultipartData(builder.build()))
                 .retrieve()
                 .toEntity(String.class)
+                .onErrorMap(WebClientResponseException.class, ex -> {
+                    if (ex.getStatusCode().value() == 404) {
+                        return new IdNotFoundException("Ресурс не найден: " + url);
+                    }
+                    return new AppException("Ошибка при обращении к сервису: " + ex.getStatusCode());
+                })
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
@@ -81,6 +90,12 @@ public class WebClientAuthCall {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntity(ProfileDTO.class)
+                .onErrorMap(WebClientResponseException.class, ex -> {
+                    if (ex.getStatusCode().value() == 404) {
+                        return new IdNotFoundException("Профиль не найден: " + url);
+                    }
+                    return new AppException("Ошибка при обращении к сервису: " + ex.getStatusCode());
+                })
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
@@ -99,6 +114,12 @@ public class WebClientAuthCall {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .toEntityList(ProfileDTO.class)
+                .onErrorMap(WebClientResponseException.class, ex -> {
+                    if (ex.getStatusCode().value() == 404) {
+                        return new IdNotFoundException("Список профилей не найден: " + url);
+                    }
+                    return new AppException("Ошибка при обращении к сервису: " + ex.getStatusCode());
+                })
                 .doOnError(err -> log.error("API not found: {}", err.getMessage()));
     }
 
@@ -118,6 +139,12 @@ public class WebClientAuthCall {
                         .build())
                 .retrieve()
                 .toEntity(ByteArrayResource.class)
+                .onErrorMap(WebClientResponseException.class, ex -> {
+                    if (ex.getStatusCode().value() == 404) {
+                        return new IdNotFoundException("Фото не найдено: " + id);
+                    }
+                    return new AppException("Ошибка при обращении к сервису: " + ex.getStatusCode());
+                })
                 .doOnError(err -> log.error("API {} not found: {}", url, id));
     }
 }

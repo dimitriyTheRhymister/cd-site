@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.site.domain.Category;
 import ru.job4j.site.dto.CategoryDTO;
 import ru.job4j.site.dto.TopicIdNameDTO;
+import ru.job4j.site.exception.IdNotFoundException;
 import ru.job4j.site.util.RestAuthCall;
 
 import java.util.List;
@@ -134,17 +135,20 @@ public class CategoriesService {
      * @return Optional<Category>
      */
     public Optional<Category> getById(int categoryId) {
-        Optional<Category> result = Optional.empty();
         try {
             var text = new RestAuthCall(String
                     .format("%s%s%d", uriProvider.getUri(SERVICE_ID), DIRECT_SINGLE, categoryId))
                     .get();
             var mapper = new ObjectMapper();
-            result = Optional.of(mapper.readValue(text, new TypeReference<>() {
+            return Optional.of(mapper.readValue(text, new TypeReference<>() {
             }));
         } catch (Exception e) {
+            // Если это IdNotFoundException, перебрасываем его дальше
+            if (e instanceof IdNotFoundException) {
+                throw (IdNotFoundException) e;
+            }
             log.error("API category service not found, error:{}", e.getMessage());
+            return Optional.empty();
         }
-        return result;
     }
 }

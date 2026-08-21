@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.job4j.site.exception.IdNotFoundException;
 import ru.job4j.site.service.AuthService;
 import ru.job4j.site.service.CategoriesService;
 import ru.job4j.site.service.NotificationService;
@@ -45,6 +46,9 @@ public class CategoriesController {
                     "Категории", "/categories/"
             );
             model.addAttribute("current_page", "categories");
+        } catch (IdNotFoundException e) {
+            // Если пришло наше исключение - перебрасываем его наверх
+            throw e;
         } catch (Exception e) {
             RequestResponseTools.addAttrBreadcrumbs(model,
                     "Главная", "/index"

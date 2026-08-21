@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ru.job4j.site.dto.InterviewStatistic;
 import ru.job4j.site.dto.UsersApprovedInterviewsDTO;
 import ru.job4j.site.dto.WisherDto;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.*;
 

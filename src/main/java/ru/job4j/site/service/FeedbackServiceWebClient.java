@@ -10,6 +10,7 @@ import ru.job4j.site.dto.FeedbackDTO;
 import ru.job4j.site.dto.InnerMessageDTO;
 import ru.job4j.site.dto.InterviewDTO;
 import ru.job4j.site.enums.StatusInterview;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.*;
 

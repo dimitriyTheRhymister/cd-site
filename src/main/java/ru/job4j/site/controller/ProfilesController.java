@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.job4j.site.dto.ProfileWithApprovedInterviewsDTO;
 import ru.job4j.site.dto.UsersApprovedInterviewsDTO;
+import ru.job4j.site.exception.IdNotFoundException;
 import ru.job4j.site.service.AuthService;
 import ru.job4j.site.service.NotificationService;
 import ru.job4j.site.service.ProfilesService;
@@ -50,10 +51,13 @@ public class ProfilesController {
     public String getProfileById(@PathVariable int id, Model model, HttpServletRequest request) throws JsonProcessingException {
         String username = "";
         var profileOptional = profilesService.getProfileById(id);
-        if (profileOptional.isPresent()) {
-            model.addAttribute("profile", profileOptional.get());
-            username = profileOptional.get().getUsername();
+        if (profileOptional.isEmpty()) {
+            // Если профиль не найден, выбрасываем исключение, которое обработает ExceptionApiHandler
+            throw new IdNotFoundException("Профиль не найден: /profiles/" + id);
         }
+        model.addAttribute("profile", profileOptional.get());
+        username = profileOptional.get().getUsername();
+
         var token = getToken(request);
         if (token != null) {
             var userInfo = authService.userInfo(token);

@@ -30,7 +30,12 @@ public class InterceptorSite implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
+        if (response.getStatus() >= 400) {
+            // Если ответ уже содержит ошибку (4xx, 5xx), не пытаемся добавить userInfo,
+            // чтобы не сломать ответ и не вызвать Cannot create a session after the response has been committed
+            return;
+        }
         var userInfo = getUserInfo(request);
         if (modelAndView != null) {
             modelAndView.addObject("userInfo", userInfo);
